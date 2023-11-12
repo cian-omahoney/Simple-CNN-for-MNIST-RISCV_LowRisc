@@ -5,7 +5,7 @@
 #include <math.h>
 
 
-
+char mnistDirectory[] = "../mnist/";
 char sz_Trndata[] = "train-images-idx3-ubyte";
 char sz_Trnlabels[] = "train-labels-idx1-ubyte";
 char sz_Tstdata[] = "t10k-images-idx3-ubyte";
@@ -118,45 +118,34 @@ void shuffle_training_set()
 
 int read_mnist(void)
 {
-char buf[512];
-char bbuf[512];
-char *pv = buf;
-int n = 0;
+    char bbuf[512];
+    int n = 0;
 
-	FILE *fi = fopen("mnist_data_path.txt","r");
-	if(fi)
-	{
-		pv = fgets(buf,256,fi);
-		printf("Data path: %s\n",buf);
-		fclose(fi);
+    sprintf(bbuf,"%s%s",mnistDirectory,sz_Trnlabels);
+    pi_trn_labels = read_mnist_labels(bbuf);
 
+    n_trn_images = n_images;
 
-		sprintf(bbuf,"%s%s",buf,sz_Trnlabels);
-		pi_trn_labels = read_mnist_labels(bbuf);
+    sprintf(bbuf,"%s%s",mnistDirectory,sz_Trndata);
+    pb_trn_data = read_mnist_data(bbuf);
 
-		n_trn_images = n_images;
+    sprintf(bbuf,"%s%s",mnistDirectory,sz_Tstlabels);
+    pi_tst_labels = read_mnist_labels(bbuf);
 
-		sprintf(bbuf,"%s%s",buf,sz_Trndata);
-		pb_trn_data = read_mnist_data(bbuf);
+    n_tst_images = n_images;
 
-		sprintf(bbuf,"%s%s",buf,sz_Tstlabels);
-		pi_tst_labels = read_mnist_labels(bbuf);
+    sprintf(bbuf,"%s%s",mnistDirectory,sz_Tstdata);
+    pb_tst_data = read_mnist_data(bbuf);
 
-		n_tst_images = n_images;
-
-		sprintf(bbuf,"%s%s",buf,sz_Tstdata);
-		pb_tst_data = read_mnist_data(bbuf);
-
-		if(pi_trn_labels!=0 && pb_trn_data!=0 && pi_tst_labels!=0 && pb_tst_data!=0)
-		{
-			n = 1;
-			printf("Data read OK\n");
-		}
-		else
-		{
-			printf("Oops. Data read failed.\n");
-		}
-	}
+    if(pi_trn_labels!=0 && pb_trn_data!=0 && pi_tst_labels!=0 && pb_tst_data!=0)
+    {
+        n = 1;
+        printf("Data read OK\n");
+    }
+    else
+    {
+        printf("Oops. Data read failed.\n");
+    }
 
 	return n;
 }
@@ -166,8 +155,8 @@ int n = 0;
 //-------------------------------------------------------------
 float dist_frand(void)
 {
-int irx,idr;
-float fx,fd,fr;
+    int irx,idr;
+    float fx,fd,fr;
 
 	irx = rand();
 	fx = (float) irx;
@@ -181,8 +170,8 @@ float fx,fd,fr;
 //-------------------------------------------------------------
 float dist_frandp(void)
 {
-int irx,idr;
-float fx,fd,fr;
+    int irx,idr;
+    float fx,fd,fr;
 
 	irx = rand();
 	fx = (float) irx;
@@ -198,13 +187,13 @@ float fx,fd,fr;
 //-------------------------------------------------------------
 void distort_imageb(unsigned char *pch)
 {
-int i,j,i1,j1,idsx,idsy,npos;
-float xtr,xtl,xbl,xbr,ytr,ytl,ybl,ybr;
-float dtx,dbx,dlhx,ddx,vx,dxv,xlv;
-float dty,dby,dlhy,ddy,vy,dyv,ylv;
-float fm = (float) 27.0;
-float fh = (float) 0.5;
-float f13 = (float) 13.5;
+    int i,j,i1,j1,idsx,idsy,npos;
+    float xtr,xtl,xbl,xbr,ytr,ytl,ybl,ybr;
+    float dtx,dbx,dlhx,ddx,vx,dxv,xlv;
+    float dty,dby,dlhy,ddy,vy,dyv,ylv;
+    float fm = (float) 27.0;
+    float fh = (float) 0.5;
+    float f13 = (float) 13.5;
 
 	xtl = xf3*dist_frand();
 	xtr = xf3*dist_frand();
@@ -301,16 +290,16 @@ void cnn_back(void);
 
 void do_experiment()
 {
-char msgbuf[256];
-time_t ltime;
-int numerrtrn,numupd,numerrtst,ntrnpat,npos;
-int i,j,k,l;
-int nrec;
-int staterr[10];
-FILE *fo;
+    char msgbuf[256];
+    time_t ltime;
+    int numerrtrn,numupd,numerrtst,ntrnpat,npos;
+    int i,j,k,l;
+    int nrec;
+    int staterr[10];
+    FILE *fo;
 
-unsigned char *pbtrn, *pbtst;
-double dlth,y;
+    unsigned char *pbtrn, *pbtst;
+    double dlth,y;
 
 
 	nPass = 50;
