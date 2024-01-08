@@ -96,10 +96,14 @@ static void do_experiment(St7735Context *lcd)
         snprintf(buf, 32, "Cy: %10ld", compute_cycles);
         lcd_st7735_puts(lcd, (LCD_Point){.x=0, .y=112}, buf);
 
-        snprintf(buf, 32, "Act: %d, Pred: %d", mnist_test_labels[i], retVal);
-        lcd_st7735_puts(lcd, (LCD_Point){.x=15, .y=20}, buf);
-
+        snprintf(buf, 32, "Actual:       %d", mnist_test_labels[i]);
+        lcd_st7735_puts(lcd, (LCD_Point){.x=10, .y=8}, buf);
+        lcd_st7735_draw_horizontal_line(lcd, (LCD_Line){.origin=(LCD_Point){.x=0,.y=22}, .length=160}, BGRColorBlack);
+        snprintf(buf, 32, "Predicted:    %d", retVal);
+        lcd_st7735_puts(lcd, (LCD_Point){.x=10, .y=26}, buf);
+        lcd_st7735_draw_horizontal_line(lcd, (LCD_Line){.origin=(LCD_Point){.x=0,.y=41}, .length=160}, BGRColorBlack);
         lcd_st7735_draw_box(lcd);
+        lcd_st7735_draw_vertical_line(lcd, (LCD_Line){.origin=(LCD_Point){.x=100,.y=0}, .length=41}, BGRColorBlack);
         for(int y=0; y<28;y++)
         {
             for(int x=0; x<28; x++)
@@ -140,6 +144,6 @@ Result lcd_st7735_draw_2by2(St7735Context *ctx, LCD_Point centre)
 {
     lcd_st7735_fill_rectangle(ctx,
                               (LCD_rectangle){.origin =centre , .width = 2, .height = 2},
-                              BGRColorBlack);
+                              BGRColorWhite);
     return (Result){.code = 0};
 }
